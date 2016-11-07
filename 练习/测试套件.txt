@@ -1,0 +1,88 @@
+*** Settings ***
+Library           Selenium2Library
+Resource          textflow.txt
+Resource          res1.txt
+Variables         var.py
+Library           BuiltIn
+
+*** Test Cases ***
+case
+    搜索测试    ${testurl}    ${searchText}
+    log    ${LIST_vars}
+    log    ${integer}
+
+case2
+    搜索测试    http://www.baidu.com    java
+
+case3
+    ${arg5}    @{arg6}    关键字测试    111    222    333    444
+    log    ${arg1}
+    log    ${arg5}
+    log    ${arg6}
+
+case4
+    ${text}    set variable    120
+    ${t}    evaluate    int(${text})+1
+    log    ${t}
+    ${random}=    evaluate    random.randint(0,sys.maxint)    random,sys
+    @{a}    set variable    11    22    33
+    @{b}    create list    44    55    66
+    log many    @{a}
+    log many    @{b}
+    @{qt}    Create List    aaa    bbb
+    run keyword and ignore error    log    ${qt}
+    run keyword and ignore error    log    aaa    INFO
+
+case5
+    ${f}    set variable    4
+    @{f}    create list    z    b    c
+    log    ${f}
+
+case6
+    @{f}    create list    a    b    c
+    @{n}    create list    d    e    f
+    @{z}    create list    ${f}    ${n}
+    log    ${z[0]}
+
+case7
+    ${a}    set variable    4
+    ${b}    set variable    6
+    run keyword if    ${a}>=5    log    ${a}
+    ...    ELSE IF    ${b}<=4    log    ${b}
+    ...     ELSE IF    ${b}==6    RUN KEYWORD IF    ${a}==4    LOG    4
+    ...    ELSE    RUN KEYWORD IF    ${a}>0    log    ${a}
+    ...    ELSE    log    0
+
+case8
+    @{j}    create list    a    b    c
+    :FOR    ${j}    IN    @{j}
+    \    log    too-${j}
+
+case9
+    :FOR    ${j}    IN RANGE    1    20
+    \    log    joo${j}
+    forj
+
+case10
+    ${a}    Evaluate    random.randint(0,100000)    random
+    ${ascii_letters}    Evaluate    string.ascii_letters    string
+
+日期加减
+    ${oldDate}    GET Time    year month day    NOW + 1day
+    ${oldDate}    GET Time    yyyy-m-dd
+    comment    ${oldDate}    Set Variable    2016-11-04
+    ${year}    ${month}    ${day}    evaluate    '${oldDate}'.Split('-')
+    ${addDays}    Set Variable    2
+    ${newDate}    evaluate    datetime.date(int('${year}'),int('${month}'),int('${day}'))+datetime.timedelta(days=int('${addDays}'))    datetime
+    ${newYMD}    evaluate    '${newDate}'.split('-')
+    ${time}    evaluate    time.strftime("%Y-%m-%d-%H-%M-%S")     time
+
+执行dos命令
+    ${a}    evaluate    os.system(r'del D:\\SVN\\qt\\feng.txt')    os
+    ${a}    evaluate    os.system(r'rd D:\\SVN\\qt')    os
+    ${a}    evaluate    os.system(r'dir>d:\\test.txt')    os
+
+打印系统值
+    ${os}    evaluate    os.name    os
+    ${sys}    evaluate    sys.platform    sys
+    log    %{OS}

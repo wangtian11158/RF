@@ -1,0 +1,27 @@
+*** Settings ***
+Library           Selenium2Library
+Library           Selenium2Library
+
+*** Keywords ***
+打开浏览器
+    [Arguments]    ${url}
+    open browser    ${url}    chrome
+    maximize browser window
+
+输入搜索内容
+    [Arguments]    ${search_content}
+    input text    id=kw    ${search_content}
+
+点击搜索
+    click button    su
+
+睡眠
+    sleep    4
+
+校验标题
+    [Arguments]    ${search_content}
+    ${title}    Get Title
+    should contain    ${title}    ${search_content}
+
+关闭所有浏览器
+    close all browsers
